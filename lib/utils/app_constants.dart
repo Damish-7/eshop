@@ -1,0 +1,17 @@
+class AppConstants {
+  static const String baseUrl = 'http://localhost:8888/eshop_api';
+
+  static const String register      = '$baseUrl/auth/register.php';
+  static const String login         = '$baseUrl/auth/login.php';
+  static const String getProducts   = '$baseUrl/products/get_products.php';
+  static const String getProduct    = '$baseUrl/products/get_product.php';
+  static const String addProduct    = '$baseUrl/products/add_product.php';
+  static const String updateProduct = '$baseUrl/products/update_product.php';
+  static const String deleteProduct = '$baseUrl/products/delete_product.php';
+  static const String addToCart     = '$baseUrl/cart/add_to_cart.php';
+  static const String getCart       = '$baseUrl/cart/get_cart.php';
+  static const String updateCart    = '$baseUrl/cart/update_cart.php';
+  static const String removeCart    = '$baseUrl/cart/remove_from_cart.php';
+  static const String placeOrder    = '$baseUrl/orders/place_order.php';
+  static const String getOrders     = '$baseUrl/orders/get_orders.php';
+}
