@@ -170,15 +170,15 @@ class LoginScreen extends StatelessWidget {
                             color:      AppColors.primary,
                           ),
                         ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Email: admin@eshop.com',
-                          style: TextStyle(fontSize: 12, color: AppColors.grey),
-                        ),
-                        Text(
-                          'Password: admin123',
-                          style: TextStyle(fontSize: 12, color: AppColors.grey),
-                        ),
+                        // SizedBox(height: 4),
+                        // Text(
+                        //   'Email: admin@eshop.com',
+                        //   style: TextStyle(fontSize: 12, color: AppColors.grey),
+                        // ),
+                        // Text(
+                        //   'Password: admin123',
+                        //   style: TextStyle(fontSize: 12, color: AppColors.grey),
+                        // ),
                       ],
                     ),
                   ),
