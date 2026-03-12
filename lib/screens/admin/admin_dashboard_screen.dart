@@ -135,7 +135,11 @@ class AdminDashboardScreen extends StatelessWidget {
               title: 'Manage Products',
               subtitle: 'Add, edit or delete products',
               color: AppColors.primary,
-              onTap: () => Get.toNamed('/admin-products'),
+              onTap: () async {
+                await Get.toNamed('/admin-products');
+                // Refresh product count when returning
+                _productCtrl.fetchProducts();
+              },
             ),
             const SizedBox(height: 12),
             _actionCard(

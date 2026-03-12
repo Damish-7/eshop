@@ -10,12 +10,21 @@ class ProductController extends GetxController {
   final RxString             selectedCategory = 'All'.obs;
 
   final List<String> categories = [
-    'All',
-    'Electronics',
-    'Laptops',
-    'Footwear',
-    'Clothing',
-  ];
+  'All',
+  'Electronics',
+  'Laptops',
+  'Footwear',
+  'Clothing',
+  'Furniture',
+  'Books',
+  'Sports',
+  'Toys',
+  'Beauty',
+  'Grocery',
+  'Appliances',
+  'Home decor',
+  'Other',
+];
 
   @override
   void onInit() {
@@ -62,8 +71,10 @@ class ProductController extends GetxController {
   void search(String query) {
     searchQuery.value = query;
     fetchProducts(
-      category: selectedCategory.value == 'All' ? null : selectedCategory.value,
-      search:   query.isEmpty ? null : query,
+      category: selectedCategory.value == 'All'
+          ? null
+          : selectedCategory.value,
+      search: query.isEmpty ? null : query,
     );
   }
 
@@ -73,17 +84,32 @@ class ProductController extends GetxController {
       final res = await ApiService.addProduct(data);
       if (res['status'] == true) {
         await fetchProducts();
-        Get.back();
+        // Close bottom sheet only
+        if (Get.isBottomSheetOpen ?? false) {
+          Get.back();
+        }
         Get.snackbar(
           'Success',
           'Product added successfully',
           backgroundColor: Colors.green,
           colorText:       Colors.white,
+          snackPosition:   SnackPosition.BOTTOM,
         );
       } else {
-        Get.snackbar('Error', res['message'] ?? 'Failed to add product',
-            backgroundColor: Colors.red, colorText: Colors.white);
+        Get.snackbar(
+          'Error',
+          res['message'] ?? 'Failed to add product',
+          backgroundColor: Colors.red,
+          colorText:       Colors.white,
+        );
       }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong',
+        backgroundColor: Colors.red,
+        colorText:       Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -95,17 +121,32 @@ class ProductController extends GetxController {
       final res = await ApiService.updateProduct(data);
       if (res['status'] == true) {
         await fetchProducts();
-        Get.back();
+        // Close bottom sheet only
+        if (Get.isBottomSheetOpen ?? false) {
+          Get.back();
+        }
         Get.snackbar(
           'Success',
           'Product updated successfully',
           backgroundColor: Colors.green,
           colorText:       Colors.white,
+          snackPosition:   SnackPosition.BOTTOM,
         );
       } else {
-        Get.snackbar('Error', res['message'] ?? 'Failed to update product',
-            backgroundColor: Colors.red, colorText: Colors.white);
+        Get.snackbar(
+          'Error',
+          res['message'] ?? 'Failed to update product',
+          backgroundColor: Colors.red,
+          colorText:       Colors.white,
+        );
       }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong',
+        backgroundColor: Colors.red,
+        colorText:       Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -123,12 +164,20 @@ class ProductController extends GetxController {
           colorText:       Colors.white,
         );
       } else {
-        Get.snackbar('Error', res['message'] ?? 'Failed to delete product',
-            backgroundColor: Colors.red, colorText: Colors.white);
+        Get.snackbar(
+          'Error',
+          res['message'] ?? 'Failed to delete product',
+          backgroundColor: Colors.red,
+          colorText:       Colors.white,
+        );
       }
     } catch (e) {
-      Get.snackbar('Error', 'Something went wrong',
-          backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        'Error',
+        'Something went wrong',
+        backgroundColor: Colors.red,
+        colorText:       Colors.white,
+      );
     }
   }
 }
