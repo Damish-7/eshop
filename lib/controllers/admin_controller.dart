@@ -35,4 +35,50 @@ class AdminController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> updateOrderStatus(int orderId, String status) async {
+    try {
+      final res = await ApiService.updateOrderStatus(orderId, status);
+      if (res['status'] == true) {
+        // Update locally without full refresh
+        final index = orders.indexWhere((o) => o.id == orderId);
+        if (index != -1) {
+          final updatedOrder = OrderModel(
+            id:          orders[index].id,
+            userId:      orders[index].userId,
+            totalAmount: orders[index].totalAmount,
+            status:      status,
+            address:     orders[index].address,
+            createdAt:   orders[index].createdAt,
+            userName:    orders[index].userName,
+            userEmail:   orders[index].userEmail,
+            itemCount:   orders[index].itemCount,
+          );
+          orders[index] = updatedOrder;
+          orders.refresh();
+        }
+        Get.snackbar(
+          'Success',
+          'Order status updated to ${status.capitalizeFirst}',
+          backgroundColor: Colors.green,
+          colorText:       Colors.white,
+          snackPosition:   SnackPosition.BOTTOM,
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          res['message'] ?? 'Failed to update status',
+          backgroundColor: Colors.red,
+          colorText:       Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Something went wrong',
+        backgroundColor: Colors.red,
+        colorText:       Colors.white,
+      );
+    }
+  }
 }

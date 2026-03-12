@@ -127,11 +127,12 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+
               // Menu Options
               _menuTile(
                 icon:    Icons.shopping_bag_outlined,
                 title:   'My Orders',
-                subtitle: 'View your order history',
+                subtitle: 'View and manage your orders',
                 onTap:   () => _showOrders(context, user.id),
               ),
               const SizedBox(height: 10),
@@ -153,6 +154,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: 24),
+
               // Logout Button
               SizedBox(
                 width:  double.infinity,
@@ -161,10 +163,10 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () => Get.defaultDialog(
                     title:      'Logout',
                     middleText: 'Are you sure you want to logout?',
-                    textConfirm:    'Logout',
-                    textCancel:     'Cancel',
+                    textConfirm:      'Logout',
+                    textCancel:       'Cancel',
                     confirmTextColor: Colors.white,
-                    buttonColor:  AppColors.error,
+                    buttonColor:      AppColors.error,
                     onConfirm: () {
                       Get.back();
                       _auth.logout();
@@ -173,10 +175,7 @@ class ProfileScreen extends StatelessWidget {
                   icon:  const Icon(Icons.logout, color: AppColors.error),
                   label: const Text(
                     'Logout',
-                    style: TextStyle(
-                      color:    AppColors.error,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: AppColors.error, fontSize: 16),
                   ),
                   style: OutlinedButton.styleFrom(
                     side:  const BorderSide(color: AppColors.error),
@@ -227,9 +226,12 @@ class ProfileScreen extends StatelessWidget {
         subtitle: subtitle != null
             ? Text(
                 subtitle,
-                style: const TextStyle(color: AppColors.grey, fontSize: 12),
-                maxLines:  1,
-                overflow:  TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color:   AppColors.grey,
+                  fontSize: 12,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               )
             : null,
         trailing: onTap != null
@@ -247,11 +249,26 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // ─── Orders Bottom Sheet ──────────────────────────────────────────────────
   void _showOrders(BuildContext context, int userId) {
+    // Use RxList so UI updates after cancel
+    final orders = <OrderModel>[].obs;
+    final isLoading = true.obs;
+
+    // Load orders
+    ApiService.getOrders(userId).then((res) {
+      if (res['status'] == true) {
+        orders.value = (res['orders'] as List)
+            .map((e) => OrderModel.fromJson(e))
+            .toList();
+      }
+      isLoading.value = false;
+    });
+
     Get.bottomSheet(
       isScrollControlled: true,
       Container(
-        height:  MediaQuery.of(context).size.height * 0.75,
+        height:  MediaQuery.of(context).size.height * 0.80,
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
           color:        Colors.white,
@@ -259,6 +276,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
+            // Handle Bar
             Container(
               width:  40,
               height: 4,
@@ -270,125 +288,230 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 16),
             const Text(
               'My Orders',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize:   20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: FutureBuilder<Map<String, dynamic>>(
-                future:  ApiService.getOrders(userId),
-                builder: (_, snap) {
-                  if (snap.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(color: AppColors.primary),
-                    );
-                  }
-                  if (!snap.hasData || snap.data?['status'] != true) {
-                    return const Center(child: Text('No orders found'));
-                  }
-                  final orders = (snap.data!['orders'] as List)
-                      .map((e) => OrderModel.fromJson(e))
-                      .toList();
+              child: Obx(() {
+                if (isLoading.value) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primary,
+                    ),
+                  );
+                }
 
-                  if (orders.isEmpty) {
-                    return const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.receipt_long_outlined,
-                            size:  60,
-                            color: AppColors.grey,
-                          ),
-                          SizedBox(height: 12),
-                          Text(
-                            'No orders yet',
-                            style: TextStyle(color: AppColors.grey),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return ListView.builder(
-                    itemCount:   orders.length,
-                    itemBuilder: (_, i) {
-                      final o = orders[i];
-                      return Container(
-                        margin:  const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color:        AppColors.background,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.lightGrey),
+                if (orders.isEmpty) {
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.receipt_long_outlined,
+                          size:  60,
+                          color: AppColors.grey,
                         ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color:        AppColors.primary.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(
-                                Icons.receipt_outlined,
-                                color: AppColors.primary,
-                                size:  22,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Order #${o.id}',
-                                    style: const TextStyle(
+                        SizedBox(height: 12),
+                        Text(
+                          'No orders yet',
+                          style: TextStyle(color: AppColors.grey),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount:   orders.length,
+                  itemBuilder: (_, i) {
+                    final o = orders[i];
+                    final canCancel = o.status == 'pending' ||
+                        o.status == 'processing';
+
+                    return Container(
+                      margin:  const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color:        AppColors.background,
+                        borderRadius: BorderRadius.circular(14),
+                        border:       Border.all(
+                          color: AppColors.lightGrey,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          // Order Header
+                          Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: _statusColor(o.status)
+                                        .withOpacity(0.1),
+                                    borderRadius:
+                                        BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(
+                                    _statusIcon(o.status),
+                                    color: _statusColor(o.status),
+                                    size:  22,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Order #${o.id}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize:   15,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        '₹${o.totalAmount.toStringAsFixed(2)} • ${o.itemCount} item(s)',
+                                        style: const TextStyle(
+                                          color:   AppColors.grey,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      Text(
+                                        o.createdAt.length >= 10
+                                            ? o.createdAt
+                                                .substring(0, 10)
+                                            : o.createdAt,
+                                        style: const TextStyle(
+                                          color:   AppColors.grey,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Status Badge
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical:   5,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _statusColor(o.status)
+                                        .withOpacity(0.1),
+                                    borderRadius:
+                                        BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    o.status.toUpperCase(),
+                                    style: TextStyle(
+                                      color: _statusColor(o.status),
+                                      fontSize:   10,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(
-                                    '₹${o.totalAmount.toStringAsFixed(2)}',
-                                    style: const TextStyle(
-                                      color: AppColors.primary,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Address Row
+                          if (o.address.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  14, 0, 14, 10),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.location_on_outlined,
+                                    size:  14,
+                                    color: AppColors.grey,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
+                                      o.address,
+                                      style: const TextStyle(
+                                        color:   AppColors.grey,
+                                        fontSize: 12,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+
+                          // Cancel Button — only for pending/processing
+                          if (canCancel) ...[
+                            const Divider(height: 1),
+                            TextButton.icon(
+                              onPressed: () => _confirmCancel(
+                                context,
+                                o.id,
+                                userId,
+                                orders,
+                              ),
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: AppColors.error,
+                                size:  18,
+                              ),
+                              label: const Text(
+                                'Cancel Order',
+                                style: TextStyle(
+                                  color:      AppColors.error,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+
+                          // Cannot cancel message
+                          if (!canCancel &&
+                              o.status != 'cancelled') ...[
+                            const Divider(height: 1),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.info_outline,
+                                    size:  14,
+                                    color: AppColors.grey
+                                        .withOpacity(0.6),
+                                  ),
+                                  const SizedBox(width: 6),
                                   Text(
-                                    o.createdAt.length >= 10
-                                        ? o.createdAt.substring(0, 10)
-                                        : o.createdAt,
-                                    style: const TextStyle(
-                                      color:   AppColors.grey,
+                                    o.status == 'delivered'
+                                        ? 'Order delivered successfully'
+                                        : 'Cannot cancel — order is ${o.status}',
+                                    style: TextStyle(
+                                      color:   AppColors.grey
+                                          .withOpacity(0.7),
                                       fontSize: 12,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical:   5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: _statusColor(o.status).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                o.status.toUpperCase(),
-                                style: TextStyle(
-                                  color:      _statusColor(o.status),
-                                  fontSize:   10,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
                           ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }),
             ),
           ],
         ),
@@ -396,13 +519,97 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // ─── Confirm Cancel Dialog ────────────────────────────────────────────────
+  void _confirmCancel(
+    BuildContext context,
+    int orderId,
+    int userId,
+    RxList<OrderModel> orders,
+  ) {
+    Get.defaultDialog(
+      title:      'Cancel Order',
+      titleStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color:      AppColors.error,
+      ),
+      middleText:
+          'Are you sure you want to cancel Order #$orderId?\n\n'
+          'This action cannot be undone.',
+      textConfirm:      'Yes, Cancel Order',
+      textCancel:       'Keep Order',
+      confirmTextColor: Colors.white,
+      buttonColor:      AppColors.error,
+      onConfirm: () async {
+        Get.back();
+        // Show loading
+        Get.dialog(
+          const Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
+          ),
+          barrierDismissible: false,
+        );
+
+        final res = await ApiService.cancelOrder(orderId, userId);
+        Get.back(); // close loading
+
+        if (res['status'] == true) {
+          // Update order status locally
+          final index = orders.indexWhere((o) => o.id == orderId);
+          if (index != -1) {
+            final updated = OrderModel(
+              id:          orders[index].id,
+              userId:      orders[index].userId,
+              totalAmount: orders[index].totalAmount,
+              status:      'cancelled',
+              address:     orders[index].address,
+              createdAt:   orders[index].createdAt,
+              userName:    orders[index].userName,
+              userEmail:   orders[index].userEmail,
+              itemCount:   orders[index].itemCount,
+            );
+            orders[index] = updated;
+            orders.refresh();
+          }
+          Get.snackbar(
+            'Order Cancelled',
+            'Your order #$orderId has been cancelled successfully',
+            backgroundColor: Colors.green,
+            colorText:       Colors.white,
+            snackPosition:   SnackPosition.BOTTOM,
+          );
+        } else {
+          Get.snackbar(
+            'Cannot Cancel',
+            res['message'] ?? 'Failed to cancel order',
+            backgroundColor: Colors.red,
+            colorText:       Colors.white,
+            snackPosition:   SnackPosition.BOTTOM,
+          );
+        }
+      },
+    );
+  }
+
+  // ─── Helpers ──────────────────────────────────────────────────────────────
   Color _statusColor(String status) {
     switch (status) {
+      case 'pending':    return AppColors.orange;
+      case 'processing': return Colors.blue;
+      case 'shipped':    return AppColors.secondary;
       case 'delivered':  return AppColors.success;
       case 'cancelled':  return AppColors.error;
-      case 'shipped':    return AppColors.secondary;
-      case 'processing': return AppColors.orange;
       default:           return AppColors.grey;
+    }
+  }
+
+  IconData _statusIcon(String status) {
+    switch (status) {
+      case 'pending':    return Icons.hourglass_empty;
+      case 'processing': return Icons.settings_outlined;
+      case 'shipped':    return Icons.local_shipping_outlined;
+      case 'delivered':  return Icons.check_circle_outline;
+      case 'cancelled':  return Icons.cancel_outlined;
+      default:           return Icons.receipt_outlined;
     }
   }
 }

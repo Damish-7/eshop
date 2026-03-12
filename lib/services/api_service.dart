@@ -127,4 +127,23 @@ class ApiService {
   static Future<Map<String, dynamic>> getAllOrders() async {
     return await get(AppConstants.getOrders, params: {'all': '1'});
   }
+
+  // Update Order Status
+static Future<Map<String, dynamic>> updateOrderStatus(
+    int orderId, String status) async {
+  return await post(AppConstants.updateOrderStatus, {
+    'order_id': orderId,
+    'status':   status,
+  });
+}
+
+
+// Cancel Order
+static Future<Map<String, dynamic>> cancelOrder(
+    int orderId, int userId) async {
+  return await post(AppConstants.cancelOrder, {
+    'order_id': orderId,
+    'user_id':  userId,
+  });
+}
 }
