@@ -51,7 +51,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     child: const Icon(
                       Icons.shopping_bag_rounded,
-                      size:  55,
+                      size:  75,
                       color: Colors.white,
                     ),
                   ),
@@ -154,35 +154,35 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 // Admin hint
-                Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color:        AppColors.primary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Column(
-                      children: [
-                        Text(
-                          'Admin Login',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color:      AppColors.primary,
-                          ),
-                        ),
-                        // SizedBox(height: 4),
-                        // Text(
-                        //   'Email: admin@eshop.com',
-                        //   style: TextStyle(fontSize: 12, color: AppColors.grey),
-                        // ),
-                        // Text(
-                        //   'Password: admin123',
-                        //   style: TextStyle(fontSize: 12, color: AppColors.grey),
-                        // ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Center(
+                //   child: Container(
+                //     padding: const EdgeInsets.all(12),
+                //     decoration: BoxDecoration(
+                //       color:        AppColors.primary.withOpacity(0.08),
+                //       borderRadius: BorderRadius.circular(10),
+                //     ),
+                //     child: const Column(
+                //       children: [
+                //         Text(
+                //           'Admin Login',
+                //           style: TextStyle(
+                //             fontWeight: FontWeight.bold,
+                //             color:      AppColors.primary,
+                //           ),
+                //         ),
+                //         SizedBox(height: 4),
+                //         Text(
+                //           'Email: admin@eshop.com',
+                //           style: TextStyle(fontSize: 12, color: AppColors.grey),
+                //         ),
+                //         Text(
+                //           'Password: admin123',
+                //           style: TextStyle(fontSize: 12, color: AppColors.grey),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
