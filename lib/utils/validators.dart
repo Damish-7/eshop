@@ -70,7 +70,7 @@ class Validators {
     return null;
   }
 
-  // ← THIS WAS MISSING
+//
   static String? validateStock(String? val) {
     if (val == null || val.trim().isEmpty) {
       return 'Stock is required';
