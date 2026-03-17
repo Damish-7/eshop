@@ -146,4 +146,46 @@ static Future<Map<String, dynamic>> cancelOrder(
     'user_id':  userId,
   });
 }
+
+
+// ─── REVIEWS ─────────────────────────────────────────────────────────────────
+static Future<Map<String, dynamic>> addReview(
+    int userId, int productId, int rating, String comment) async {
+  return await post(AppConstants.addReview, {
+    'user_id':    userId,
+    'product_id': productId,
+    'rating':     rating,
+    'comment':    comment,
+  });
+}
+
+static Future<Map<String, dynamic>> getReviews(int productId) async {
+  return await get(AppConstants.getReviews, params: {
+    'product_id': productId.toString(),
+  });
+}
+
+static Future<Map<String, dynamic>> checkReview(
+    int userId, int productId) async {
+  return await get(AppConstants.checkReview, params: {
+    'user_id':    userId.toString(),
+    'product_id': productId.toString(),
+  });
+}
+
+// ─── WISHLIST ─────────────────────────────────────────────────────────────────
+static Future<Map<String, dynamic>> toggleWishlist(
+    int userId, int productId) async {
+  return await post(AppConstants.toggleWishlist, {
+    'user_id':    userId,
+    'product_id': productId,
+  });
+}
+
+static Future<Map<String, dynamic>> getWishlist(int userId) async {
+  return await get(AppConstants.getWishlist, params: {
+    'user_id': userId.toString(),
+  });
+}
+
 }

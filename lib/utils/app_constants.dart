@@ -15,5 +15,14 @@ class AppConstants {
   static const String placeOrder        = '$baseUrl/orders/place_order.php';
   static const String getOrders         = '$baseUrl/orders/get_orders.php';
   static const String updateOrderStatus = '$baseUrl/orders/update_order_status.php';
-  static const String cancelOrder       = '$baseUrl/orders/cancel_order.php'; 
+  static const String cancelOrder       = '$baseUrl/orders/cancel_order.php';
+
+  // Reviews
+  static const String addReview         = '$baseUrl/reviews/add_review.php';
+  static const String getReviews        = '$baseUrl/reviews/get_reviews.php';
+  static const String checkReview       = '$baseUrl/reviews/check_review.php';
+
+  // Wishlist
+  static const String toggleWishlist    = '$baseUrl/wishlist/toggle_wishlist.php';
+  static const String getWishlist       = '$baseUrl/wishlist/get_wishlist.php';
 }

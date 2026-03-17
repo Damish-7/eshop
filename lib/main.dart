@@ -1,3 +1,4 @@
+import 'package:eshop/screens/wishlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'controllers/auth_controller.dart';
@@ -15,6 +16,7 @@ import 'screens/admin/admin_dashboard_screen.dart';
 import 'screens/admin/admin_products_screen.dart';
 import 'screens/admin/admin_orders_screen.dart';
 import 'utils/app_colors.dart';
+import 'controllers/wishlist_controller.dart'; // ← ADD
 
 void main() {
   runApp(const EShopApp());
@@ -77,6 +79,8 @@ class EShopApp extends StatelessWidget {
         Get.put(ProductController());
         Get.put(CartController());
         Get.put(AdminController());
+        Get.put(WishlistController()); 
+        // ← ADD
       }),
       initialRoute: '/splash',
       getPages: [
@@ -90,6 +94,7 @@ class EShopApp extends StatelessWidget {
         GetPage(name: '/admin',          page: () => AdminDashboardScreen()),
         GetPage(name: '/admin-products', page: () => AdminProductsScreen()),
         GetPage(name: '/admin-orders',   page: () => AdminOrdersScreen()),
+        GetPage(name: '/wishlist',       page: () => WishlistScreen()),
       ],
     );
   }

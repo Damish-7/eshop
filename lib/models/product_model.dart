@@ -7,6 +7,8 @@ class ProductModel {
   final String category;
   final String imageUrl;
   final String createdAt;
+  final double averageRating; // ← NEW
+  final int    totalReviews;  // ← NEW
 
   ProductModel({
     required this.id,
@@ -17,6 +19,8 @@ class ProductModel {
     required this.category,
     required this.imageUrl,
     required this.createdAt,
+    required this.averageRating,
+    required this.totalReviews,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +33,10 @@ class ProductModel {
       category:    json['category']                       ?? '',
       imageUrl:    json['image_url']                      ?? '',
       createdAt:   json['created_at']                     ?? '',
+      averageRating: double.tryParse(
+                       json['average_rating'].toString())            ?? 0.0,
+      totalReviews:  int.tryParse(
+                       json['total_reviews'].toString())             ?? 0,
     );
   }
 

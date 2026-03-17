@@ -7,6 +7,7 @@ import '../controllers/cart_controller.dart';
 import '../controllers/auth_controller.dart';
 import '../models/product_model.dart';
 import '../utils/app_colors.dart';
+import '../controllers/wishlist_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -33,6 +34,12 @@ class HomeScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
         ),
         actions: [
+
+          IconButton(
+            icon: const Icon(Icons.favorite_border),
+            onPressed: () => Get.toNamed('/wishlist'),
+          ),
+          
           Obx(() => badges.Badge(
                 showBadge: _cartCtrl.itemCount > 0,
                 badgeContent: Text(
@@ -268,6 +275,37 @@ class _ProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: GetBuilder<WishlistController>(
+                      builder: (wishCtrl) {
+                        final isWished = wishCtrl.isWishlisted(product.id);
+                        return GestureDetector(
+                          onTap: () => wishCtrl.toggleWishlist(product.id),
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              isWished ? Icons.favorite : Icons.favorite_border,
+                              color: isWished ? Colors.red : AppColors.grey,
+                              size: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -289,6 +327,29 @@ class _ProductCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
+                    if (product.totalReviews > 0)
+                      Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.amber, size: 12),
+                          const SizedBox(width: 2),
+                          Text(
+                            '${product.averageRating}',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.amber,
+                            ),
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            '(${product.totalReviews})',
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: AppColors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
                     Text(
                       product.category,
                       style: const TextStyle(
