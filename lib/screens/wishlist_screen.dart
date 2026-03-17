@@ -5,11 +5,24 @@ import '../controllers/cart_controller.dart';
 import '../models/wishlist_model.dart';
 import '../utils/app_colors.dart';
 
-class WishlistScreen extends StatelessWidget {
+class WishlistScreen extends StatefulWidget {
   WishlistScreen({super.key});
 
+  @override
+  State<WishlistScreen> createState() => _WishlistScreenState();
+}
+
+class _WishlistScreenState extends State<WishlistScreen> {
   final _wishCtrl = Get.find<WishlistController>();
+
   final _cartCtrl = Get.find<CartController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _wishCtrl.fetchWishlist();
+  }
 
   @override
   Widget build(BuildContext context) {
