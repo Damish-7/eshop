@@ -79,7 +79,7 @@ class WishlistController extends GetxController {
           isNowWishlisted ? '❤️ Added to Wishlist' : 'Removed from Wishlist',
           res['message'],
           backgroundColor: isNowWishlisted
-              ? Colors.pink
+              ? const Color.fromARGB(255, 245, 155, 185)
               : Colors.grey,
           colorText:     Colors.white,
           snackPosition: SnackPosition.BOTTOM,
