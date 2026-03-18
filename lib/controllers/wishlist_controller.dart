@@ -88,7 +88,7 @@ class WishlistController extends GetxController {
         Get.snackbar(
           isNowWishlisted ? '❤️ Added to Wishlist' : 'Removed from Wishlist',
           res['message'],
-          backgroundColor: isNowWishlisted ? Colors.pink : Colors.grey,
+          backgroundColor: isNowWishlisted ? const Color.fromARGB(255, 240, 170, 193) : Colors.grey,
           colorText:       Colors.white,
           snackPosition:   SnackPosition.BOTTOM,
           duration:        const Duration(seconds: 1),
