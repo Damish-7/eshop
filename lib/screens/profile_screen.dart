@@ -300,6 +300,14 @@ class ProfileScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 10),
+            _menuTile(
+              icon: Icons.location_on_outlined,
+              title: 'My Addresses',
+              subtitle: 'Manage delivery addresses',
+              color: AppColors.primary,
+              onTap: () => Get.toNamed('/addresses'),
+            ),
             const SizedBox(height: 16),
             Expanded(
               child: Obx(() {

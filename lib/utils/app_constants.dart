@@ -25,4 +25,11 @@ class AppConstants {
   // Wishlist
   static const String toggleWishlist    = '$baseUrl/wishlist/toggle_wishlist.php';
   static const String getWishlist       = '$baseUrl/wishlist/get_wishlist.php';
+
+  //addresses
+  static const String addAddress        = '$baseUrl/addresses/add_address.php';
+  static const String getAddresses      = '$baseUrl/addresses/get_addresses.php';
+  static const String updateAddress     = '$baseUrl/addresses/update_address.php';
+  static const String deleteAddress     = '$baseUrl/addresses/delete_address.php';
+  static const String setDefaultAddress = '$baseUrl/addresses/set_default_address.php';
 }

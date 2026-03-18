@@ -188,4 +188,39 @@ static Future<Map<String, dynamic>> getWishlist(int userId) async {
   });
 }
 
+
+// ─── ADDRESSES ───────────────────────────────────────────────────────────────
+static Future<Map<String, dynamic>> addAddress(
+    Map<String, dynamic> data) async {
+  return await post(AppConstants.addAddress, data);
+}
+
+static Future<Map<String, dynamic>> getAddresses(int userId) async {
+  return await get(AppConstants.getAddresses, params: {
+    'user_id': userId.toString(),
+  });
+}
+
+static Future<Map<String, dynamic>> updateAddress(
+    Map<String, dynamic> data) async {
+  return await post(AppConstants.updateAddress, data);
+}
+
+static Future<Map<String, dynamic>> deleteAddress(
+    int id, int userId) async {
+  return await post(AppConstants.deleteAddress, {
+    'id':      id,
+    'user_id': userId,
+  });
+}
+
+static Future<Map<String, dynamic>> setDefaultAddress(
+    int id, int userId) async {
+  return await post(AppConstants.setDefaultAddress, {
+    'id':      id,
+    'user_id': userId,
+  });
+}
+
+
 }

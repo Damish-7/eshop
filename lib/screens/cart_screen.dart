@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 //import 'package:cached_network_image/cached_network_image.dart';
 import '../controllers/cart_controller.dart';
 import '../utils/app_colors.dart';
+import '../controllers/address_controller.dart';
 
 class CartScreen extends StatelessWidget {
   CartScreen({super.key});
@@ -326,46 +327,238 @@ class CartScreen extends StatelessWidget {
   }
 
   void _showOrderDialog(BuildContext context) {
-    Get.defaultDialog(
-      title: 'Delivery Address',
-      titleStyle: const TextStyle(fontWeight: FontWeight.bold),
-      content: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: TextField(
-          controller: _addressCtrl,
-          maxLines: 3,
-          decoration: InputDecoration(
-            hintText: 'Enter your full delivery address...',
-            filled: true,
-            fillColor: AppColors.background,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.lightGrey),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.primary),
+  final addressCtrl = Get.find<AddressController>();
+
+  Get.bottomSheet(
+    isScrollControlled: true,
+    Container(
+      height:  MediaQuery.of(context).size.height * 0.75,
+      padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        color:        Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Handle
+          Center(
+            child: Container(
+              width: 40, height: 4,
+              decoration: BoxDecoration(
+                color:        AppColors.lightGrey,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
           ),
-        ),
+          const SizedBox(height: 16),
+          const Text(
+            'Select Delivery Address',
+            style: TextStyle(
+              fontSize:   20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Address List
+          Expanded(
+            child: Obx(() {
+              if (addressCtrl.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primary,
+                  ),
+                );
+              }
+
+              if (addressCtrl.addresses.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.location_off_outlined,
+                        size:  50,
+                        color: AppColors.grey,
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'No saved addresses',
+                        style: TextStyle(color: AppColors.grey),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          Get.back();
+                          Get.toNamed('/addresses');
+                        },
+                        icon:  const Icon(Icons.add),
+                        label: const Text('Add Address'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                itemCount:   addressCtrl.addresses.length,
+                itemBuilder: (_, i) {
+                  final addr = addressCtrl.addresses[i];
+                  return Obx(() {
+                    final isSelected =
+                        addressCtrl.selectedAddress.value?.id == addr.id;
+                    return GestureDetector(
+                      onTap: () => addressCtrl.selectAddress(addr),
+                      child: Container(
+                        margin:  const EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color:        isSelected
+                              ? AppColors.primary.withOpacity(0.05)
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.primary
+                                : AppColors.lightGrey,
+                            width: isSelected ? 2 : 1,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            // Radio
+                            Container(
+                              width:  22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColors.primary
+                                      : AppColors.grey,
+                                  width: 2,
+                                ),
+                              ),
+                              child: isSelected
+                                  ? Center(
+                                      child: Container(
+                                        width:  12,
+                                        height: 12,
+                                        decoration: const BoxDecoration(
+                                          color: AppColors.primary,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        addr.label,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: isSelected
+                                              ? AppColors.primary
+                                              : AppColors.black,
+                                        ),
+                                      ),
+                                      if (addr.isDefault) ...[
+                                        const SizedBox(width: 6),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 6,
+                                            vertical:   2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber
+                                                .withOpacity(0.15),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                          child: const Text(
+                                            'Default',
+                                            style: TextStyle(
+                                              color:    Colors.amber,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                  Text(
+                                    addr.fullName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${addr.address}, ${addr.city}, ${addr.state} - ${addr.pincode}',
+                                    style: const TextStyle(
+                                      color:   AppColors.grey,
+                                      fontSize: 12,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+                },
+              );
+            }),
+          ),
+
+          // Add New Address Link
+          TextButton.icon(
+            onPressed: () {
+              Get.back();
+              Get.toNamed('/addresses');
+            },
+            icon:  const Icon(Icons.add_location_alt_outlined),
+            label: const Text('Add New Address'),
+          ),
+          const SizedBox(height: 8),
+
+          // Confirm Order Button
+          Obx(() => SizedBox(
+            width:  double.infinity,
+            height: 52,
+            child: ElevatedButton.icon(
+              onPressed: addressCtrl.selectedAddress.value == null
+                  ? null
+                  : () {
+                      Get.back();
+                      _cartCtrl.placeOrder(
+                        addressCtrl.selectedAddress.value!.fullAddress,
+                      );
+                    },
+              icon:  const Icon(Icons.local_shipping_outlined),
+              label: const Text(
+                'Confirm Order',
+                style: TextStyle(
+                  fontSize:   17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )),
+        ],
       ),
-      textConfirm: 'Confirm Order',
-      textCancel: 'Cancel',
-      confirmTextColor: Colors.white,
-      buttonColor: AppColors.primary,
-      onConfirm: () {
-        if (_addressCtrl.text.trim().isEmpty) {
-          Get.snackbar(
-            'Error',
-            'Please enter your delivery address',
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
-          return;
-        }
-        Get.back();
-        _cartCtrl.placeOrder(_addressCtrl.text.trim());
-      },
-    );
-  }
+    ),
+  );
+}
 }

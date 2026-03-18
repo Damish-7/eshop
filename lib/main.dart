@@ -17,6 +17,8 @@ import 'screens/admin/admin_products_screen.dart';
 import 'screens/admin/admin_orders_screen.dart';
 import 'utils/app_colors.dart';
 import 'controllers/wishlist_controller.dart'; 
+import 'controllers/address_controller.dart'; // ← ADD
+import 'screens/address_screen.dart';          // ← ADD
 
 void main() {
   runApp(const EShopApp());
@@ -79,8 +81,9 @@ class EShopApp extends StatelessWidget {
         Get.put(ProductController());
         Get.put(CartController());
         Get.put(AdminController());
-        Get.put(WishlistController()); 
-        // ← ADD
+        Get.put(WishlistController());
+        Get.put(AddressController()); 
+        
       }),
       initialRoute: '/splash',
       getPages: [
@@ -95,6 +98,8 @@ class EShopApp extends StatelessWidget {
         GetPage(name: '/admin-products', page: () => AdminProductsScreen()),
         GetPage(name: '/admin-orders',   page: () => AdminOrdersScreen()),
         GetPage(name: '/wishlist',       page: () => WishlistScreen()),
+        GetPage(name: '/addresses',      page: () => AddressScreen()),
+        
       ],
     );
   }

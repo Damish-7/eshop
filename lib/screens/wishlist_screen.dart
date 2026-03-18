@@ -249,4 +249,6 @@ class _WishlistCard extends StatelessWidget {
       ),
     );
   }
+
+  
 }
