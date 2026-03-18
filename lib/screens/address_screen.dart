@@ -605,38 +605,38 @@ class _AddressCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Set as Default Button
-          if (!address.isDefault)
-            GestureDetector(
-              onTap: onDefault,
-              child: Container(
-                width:   double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color:        AppColors.background,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.lightGrey),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.star_border,
-                      size:  16,
-                      color: AppColors.grey,
-                    ),
-                    SizedBox(width: 6),
-                    Text(
-                      'Set as Default',
-                      style: TextStyle(
-                        color:      AppColors.grey,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          // // Set as Default Button
+          // if (!address.isDefault)
+          //   GestureDetector(
+          //     onTap: onDefault,
+          //     child: Container(
+          //       width:   double.infinity,
+          //       padding: const EdgeInsets.symmetric(vertical: 10),
+          //       decoration: BoxDecoration(
+          //         color:        AppColors.background,
+          //         borderRadius: BorderRadius.circular(8),
+          //         border: Border.all(color: AppColors.lightGrey),
+          //       ),
+          //       child: const Row(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Icon(
+          //             Icons.star_border,
+          //             size:  16,
+          //             color: AppColors.grey,
+          //           ),
+          //           SizedBox(width: 6),
+          //           Text(
+          //             'Set as Default',
+          //             style: TextStyle(
+          //               color:      AppColors.grey,
+          //               fontWeight: FontWeight.w600,
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
         ],
       ),
     );

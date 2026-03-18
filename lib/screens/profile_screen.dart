@@ -148,9 +148,11 @@ class ProfileScreen extends StatelessWidget {
               _menuTile(
                 icon: Icons.location_on_outlined,
                 title: 'Address',
-                subtitle:
-                    user.address.isEmpty ? 'No address saved' : user.address,
+                subtitle: 'Address you have saved',
+                onTap: () => Get.toNamed('/addresses'),
+                    // user.address.isEmpty ? 'No address saved' : user.address,
               ),
+
               if (user.isAdmin) ...[
                 const SizedBox(height: 10),
                 _menuTile(
@@ -304,7 +306,7 @@ class ProfileScreen extends StatelessWidget {
             _menuTile(
               icon: Icons.location_on_outlined,
               title: 'My Addresses',
-              subtitle: 'Manage delivery addresses',
+              subtitle: 'Manage your delivery addresses',
               color: AppColors.primary,
               onTap: () => Get.toNamed('/addresses'),
             ),
