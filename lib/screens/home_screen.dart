@@ -34,12 +34,10 @@ class HomeScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
         ),
         actions: [
-
           IconButton(
             icon: const Icon(Icons.favorite_border),
             onPressed: () => Get.toNamed('/wishlist'),
           ),
-          
           Obx(() => badges.Badge(
                 showBadge: _cartCtrl.itemCount > 0,
                 badgeContent: Text(
@@ -279,32 +277,31 @@ class _ProductCard extends StatelessWidget {
                   Positioned(
                     top: 8,
                     right: 8,
-                    child: GetBuilder<WishlistController>(
-                      builder: (wishCtrl) {
-                        final isWished = wishCtrl.isWishlisted(product.id);
-                        return GestureDetector(
-                          onTap: () => wishCtrl.toggleWishlist(product.id),
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              isWished ? Icons.favorite : Icons.favorite_border,
-                              color: isWished ? Colors.red : AppColors.grey,
-                              size: 18,
-                            ),
+                    child: Obx(() {
+                      final wishCtrl = Get.find<WishlistController>();
+                      final isWished = wishCtrl.isWishlisted(product.id);
+                      return GestureDetector(
+                        onTap: () => wishCtrl.toggleWishlist(product.id),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 4,
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                    ),
+                          child: Icon(
+                            isWished ? Icons.favorite : Icons.favorite_border,
+                            color: isWished ? Colors.red : AppColors.grey,
+                            size: 18,
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                 ],
               ),

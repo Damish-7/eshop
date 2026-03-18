@@ -16,7 +16,7 @@ import 'screens/admin/admin_dashboard_screen.dart';
 import 'screens/admin/admin_products_screen.dart';
 import 'screens/admin/admin_orders_screen.dart';
 import 'utils/app_colors.dart';
-import 'controllers/wishlist_controller.dart'; // ← ADD
+import 'controllers/wishlist_controller.dart'; 
 
 void main() {
   runApp(const EShopApp());
@@ -99,3 +99,8 @@ class EShopApp extends StatelessWidget {
     );
   }
 }
+
+
+
+//- Email: `admin@eshop.com`
+//- Password: `admin123`
