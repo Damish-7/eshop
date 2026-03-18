@@ -83,6 +83,7 @@ eshop/
 ├── lib/
 │   ├── main.dart
 │   ├── screens/
+│   │   ├── address_screen.dart
 │   │   ├── splash_screen.dart
 │   │   ├── login_screen.dart
 │   │   ├── register_screen.dart
@@ -107,7 +108,10 @@ htdocs/eshop_api/
 ├── cart/
 ├── orders/
 ├── reviews/
-└── wishlist/
+├── wishlist/
+└── addresses/
+
+
 ```
 
 ---
