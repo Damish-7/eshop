@@ -279,7 +279,7 @@ The app will open in Chrome browser.
 
 ## 👨‍💻 Author
 
-@Damish-7
+[7.damish](https://github.com/Damish-7)
 
 ---
 
